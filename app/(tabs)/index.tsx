@@ -5,78 +5,20 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
 import { ProfileCard } from '@/components/ProfileCard';
-
-const tempProfiles = [{
-  "id": "55be3c8fc964860700ebf515",
-  "info": {
-    "age": 20,
-    "type": "single",
-    "gender": "male",
-    "sexuality": "straight",
-    "name": "John",
-    // a short text about them
-    "about": "\"Tell us more about you\"",
-    // a list of desires
-    "desires": [
-      "Food"
-    ],
-    // a list of tags they're interested in
-    "interests": [
-      "Food"
-    ]
-  },
-  "associated": null, // if they're a couple, this will be populated
-  "photos": [ // this will be a list of zero or more photos
-    {
-      "url": "...",
-      "width": 716,
-      "height": 716
-    }
-  ]
-}, {
-  "id": "55be3c8fc964860700ebf515",
-  "info": {
-    "age": 20,
-    "type": "single",
-    "gender": "male",
-    "sexuality": "straight",
-    "name": "Kirra",
-    // a short text about them
-    "about": "\"Tell us more about you\"",
-    // a list of desires
-    "desires": [
-      "Food"
-    ],
-    // a list of tags they're interested in
-    "interests": [
-      "Food"
-    ]
-  },
-  "associated": null, // if they're a couple, this will be populated
-  "photos": [ // this will be a list of zero or more photos
-    {
-      "url": "...",
-      "width": 716,
-      "height": 716
-    }
-  ]
-}]
+import ProfileList from '@/components/ProfileList';
+import { profiles } from '@/stores/profileStore'
 
 export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
-      <ProfileCard
-        profile={tempProfiles[0]}
-        onLike={() => { }}
-        onDislike={() => { }}
-        onDetails={() => { }}
-      />
+      <ProfileList profiles={profiles} />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#FFF",
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
   },

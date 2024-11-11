@@ -52,3 +52,59 @@ export interface Profile {
   // A flag indicating if the user has been disliked by the current user.
   disliked?: boolean;
 }
+
+export const profiles = [{
+  "id": "55be3c8fc964860700ebf515",
+  "info": {
+    "age": 20,
+    "type": "single",
+    "gender": "male",
+    "sexuality": "straight",
+    "name": "John",
+    // a short text about them
+    "about": "\"Tell us more about you\"",
+    // a list of desires
+    "desires": [
+      "Food"
+    ],
+    // a list of tags they're interested in
+    "interests": [
+      "Food"
+    ]
+  },
+  "associated": null, // if they're a couple, this will be populated
+  "photos": [ // this will be a list of zero or more photos
+    {
+      "url": "...",
+      "width": 716,
+      "height": 716
+    }
+  ]
+}, {
+  "id": "55be3c8fc964860700ebf516",
+  "info": {
+    "age": 20,
+    "type": "single",
+    "gender": "female",
+    "sexuality": "straight",
+    "name": "Kirra",
+    // a short text about them
+    "about": "\"Tell us more about you\"",
+    // a list of desires
+    "desires": [
+      "Food"
+    ],
+    // a list of tags they're interested in
+    "interests": [
+      "Food"
+    ]
+  },
+  "associated": null, // if they're a couple, this will be populated
+  "photos": [ // this will be a list of zero or more photos
+    {
+      "url": "...",
+      "width": 716,
+      "height": 716
+    }
+  ]
+}];
