@@ -1,0 +1,54 @@
+/**
+ * Represents a photo object in a user's profile.
+ * Each photo contains a URL, width, and height.
+ */
+export interface Photo {
+  // The URL of the photo.
+  url: string;
+  // The width of the photo in pixels.
+  width: number;
+  // The height of the photo in pixels.
+  height: number;
+}
+
+/**
+ * Contains detailed information about a user's profile.
+ * This includes personal attributes and interests.
+ */
+export interface ProfileInfo {
+  // The age of the user.
+  age: number;
+  // The relationship type of the user (e.g., "single").
+  type: string;
+  // The gender of the user.
+  gender: string;
+  // The sexuality of the user.
+  sexuality: string;
+  // The name of the user.
+  name: string;
+  // A short description or bio about the user.
+  about: string;
+  // A list of things the user desires or is looking for.
+  desires: string[];
+  // A list of interests or hobbies the user is engaged in.
+  interests: string[];
+}
+
+/**
+ * Represents a complete user profile.
+ * Contains personal information, photos, and associated profile data.
+ */
+export interface Profile {
+  // The unique identifier for the user's profile.
+  id: string;
+  // Contains detailed personal information of the user.
+  info: ProfileInfo;
+  // Indicates an associated profile if the user is part of a couple, or null if single.
+  associated: null | string;
+  // A list of photos associated with the user's profile.
+  photos: Photo[];
+  // A flag indicating if the user has been liked by the current user.
+  liked?: boolean;
+  // A flag indicating if the user has been disliked by the current user.
+  disliked?: boolean;
+}
