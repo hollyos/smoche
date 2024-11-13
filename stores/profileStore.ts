@@ -47,10 +47,10 @@ export interface Profile {
   associated: null | string;
   // A list of photos associated with the user's profile.
   photos: Photo[];
-  // A flag indicating if the user has been liked by the current user.
-  liked?: boolean;
-  // A flag indicating if the user has been disliked by the current user.
-  disliked?: boolean;
+  // // A flag indicating if the user has been liked by the current user.
+  // liked?: boolean;
+  // // A flag indicating if the user has been disliked by the current user.
+  // disliked?: boolean;
 }
 
 export const profiles = [{
@@ -65,19 +65,21 @@ export const profiles = [{
     "about": "\"Tell us more about you\"",
     // a list of desires
     "desires": [
-      "Food"
+      "Relationship",
+      "Casual",
     ],
     // a list of tags they're interested in
     "interests": [
-      "Food"
+      "Food",
+      "Video Games",
     ]
   },
   "associated": null, // if they're a couple, this will be populated
   "photos": [ // this will be a list of zero or more photos
     {
-      "url": "...",
-      "width": 716,
-      "height": 716
+      "url": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61",
+      "width": 1480,
+      "height": 1480
     }
   ]
 }, {
@@ -92,19 +94,29 @@ export const profiles = [{
     "about": "\"Tell us more about you\"",
     // a list of desires
     "desires": [
-      "Food"
+      "Long-Term Relationship",
+      "Casual",
+      "Short-Term Relationship",
+      "Single 4 Couple",
+      "Single 4 Single",
     ],
     // a list of tags they're interested in
     "interests": [
-      "Food"
+      "Art",
+      "Reading",
+      "DIY",
+      "Kyacking",
+      "Drawing",
+      "Climbing",
+      "Adventure"
     ]
   },
   "associated": null, // if they're a couple, this will be populated
   "photos": [ // this will be a list of zero or more photos
     {
-      "url": "...",
-      "width": 716,
-      "height": 716
+      "url": "https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453",
+      "width": 605,
+      "height": 907
     }
   ]
 }];
