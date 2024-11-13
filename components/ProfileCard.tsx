@@ -1,7 +1,14 @@
 import { FC, useEffect, useState } from 'react';
 import { FlatList, View, Text, StyleSheet, Dimensions, Image } from 'react-native';
 import { Pill } from './Pill';
-import { Profile } from '@/stores/profileStore'
+import { Profile } from '@/stores/profileStore';
+import Animated, {
+  useSharedValue,
+  withTiming,
+  useAnimatedStyle,
+  Easing,
+} from 'react-native-reanimated';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 /**
  * Props interface for the ProfileCard component.
@@ -43,6 +50,15 @@ export interface ProfileCardProps {
  * @returns {React.ReactElement} A card with profile information and action buttons.
  */
 export const ProfileCard: FC<ProfileCardProps> = ({ profile, onLike, onDislike, onDetails }) => {
+  /**
+   * State variable to manage the visibility of additional profile details.
+   * Set to true when details are expanded, false otherwise.
+   */
+  const [detailsVisible, setDetailsVisible] = useState(false);
+
+  /**
+   * Holds window and screen dimensions to adapt layout dynamically based on screen size changes.
+   */
   const windowDimensions = Dimensions.get('window');
   const screenDimensions = Dimensions.get('screen');
   const [dimensions, setDimensions] = useState({
@@ -50,6 +66,55 @@ export const ProfileCard: FC<ProfileCardProps> = ({ profile, onLike, onDislike, 
     screen: screenDimensions,
   });
 
+  /**
+   * Animation properties for expanding/collapsing profile details.
+   * Utilizes `useSharedValue` and `withTiming` for smooth transitions.
+   */
+  const detailsPaddingBottom = useSharedValue(0);
+  const detailsHeightScale = useSharedValue(0);
+  const detailsHeight = useSharedValue(400);
+
+  /**
+   * Configuration for animation, specifying easing and duration.
+   */
+  const config = {
+    duration: 500,
+    easing: Easing.bezier(0.5, 0.01, 0, 1),
+  };
+
+  /**
+   * Animated style for the profile details view.
+   * Transforms and adjusts padding based on details visibility state.
+   */
+  const animatedStyles = useAnimatedStyle(() => {
+    return {
+      height: detailsHeight.value,
+      maxHeight: detailsHeight.value,
+      paddingBottom: detailsPaddingBottom.value,
+      transform: [{ scaleY: detailsHeightScale.value }],
+    };
+  });
+
+  /**
+   * Effect hook to initialize animation values when `detailsVisible` is toggled.
+   * Ensures the expanded details area appears smoothly.
+   */
+  useEffect(() => {
+    if (detailsVisible) {
+      detailsPaddingBottom.value = withTiming(15, config);
+      detailsHeightScale.value = withTiming(1, config);
+      detailsHeight.value = withTiming(400, config);
+    } else {
+      detailsPaddingBottom.value = withTiming(0, config);
+      detailsHeightScale.value = withTiming(0, config);
+      detailsHeight.value = withTiming(0, config);
+    }
+  }, [detailsVisible])
+
+  /**
+   * Effect hook to handle dimension changes dynamically.
+   * Updates state when screen or window dimensions change.
+   */
   useEffect(() => {
     const subscription = Dimensions.addEventListener(
       'change',
@@ -58,11 +123,11 @@ export const ProfileCard: FC<ProfileCardProps> = ({ profile, onLike, onDislike, 
       },
     );
     return () => subscription?.remove();
-  });
+  }, []);
 
   return (
     <View style={styles.card}>
-      <View style={styles.imageContainer}>
+      <TouchableOpacity onPress={() => setDetailsVisible(!detailsVisible)} style={styles.imageContainer}>
         <Image source={{ uri: profile.photos[0].url }} style={{ width: dimensions.screen.width, height: 500 }} />
 
         <View style={styles.basicsContainer}>
@@ -74,36 +139,38 @@ export const ProfileCard: FC<ProfileCardProps> = ({ profile, onLike, onDislike, 
             <Text style={styles.details}>{profile.info.sexuality}</Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
 
-      <View style={styles.aboutContainer}>
-        <Text style={styles.subtitle}>About</Text>
-        <Text style={styles.about}>{profile.info.about}</Text>
-      </View>
+      <Animated.View style={[styles.bottomWrapper, animatedStyles]}>
+        <View style={styles.aboutContainer}>
+          <Text style={styles.subtitle}>About</Text>
+          <Text style={styles.about}>{profile.info.about}</Text>
+        </View>
 
-      <View style={{ paddingHorizontal: 14, marginVertical: 6 }}>
-        <Text style={styles.subtitle}>Desires</Text>
-        <FlatList
-          data={profile.info.desires}
-          renderItem={({ item }) => (
-            <Pill>{item}</Pill>
-          )}
-          keyExtractor={(item) => item}
-          style={styles.pillRow}
-        />
-      </View>
+        <View style={{ paddingHorizontal: 14, marginVertical: 6 }}>
+          <Text style={styles.subtitle}>Desires</Text>
+          <FlatList
+            data={profile.info.desires}
+            renderItem={({ item }) => (
+              <Pill>{item}</Pill>
+            )}
+            keyExtractor={(item) => item}
+            style={styles.pillRow}
+          />
+        </View>
 
-      <View style={{ paddingHorizontal: 14, marginVertical: 6 }}>
-        <Text style={styles.subtitle}>Interests</Text>
-        <FlatList
-          data={profile.info.interests}
-          renderItem={({ item }) => (
-            <Pill>{item}</Pill>
-          )}
-          keyExtractor={(item) => item}
-          style={styles.pillRow}
-        />
-      </View>
+        <View style={{ paddingHorizontal: 14, marginVertical: 6 }}>
+          <Text style={styles.subtitle}>Interests</Text>
+          <FlatList
+            data={profile.info.interests}
+            renderItem={({ item }) => (
+              <Pill>{item}</Pill>
+            )}
+            keyExtractor={(item) => item}
+            style={styles.pillRow}
+          />
+        </View>
+      </Animated.View>
     </View>
   );
 };
@@ -118,9 +185,9 @@ const styles = StyleSheet.create({
    * Defines padding, background color, and border radius for the card.
    */
   card: {
-    paddingVertical: 15,
     backgroundColor: '#ffffff',
     borderRadius: 10,
+    position: 'relative',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -129,7 +196,8 @@ const styles = StyleSheet.create({
   },
 
   imageContainer: {
-    position: "relative",
+    position: 'relative',
+    zIndex: 5,
   },
 
   /**
@@ -137,26 +205,27 @@ const styles = StyleSheet.create({
    * Uses bold font for prominence.
    */
   basicsContainer: {
-    position: 'absolute',
+    backgroundColor: 'rgba(66,66,66,0.45)',
     bottom: 0,
     paddingHorizontal: 14,
-    backgroundColor: 'rgba(66,66,66,0.45)',
+    position: 'absolute',
     shadowColor: '#333',
     shadowOffset: { height: -3, width: 0 },
     shadowOpacity: 0.3,
     width: '100%',
+    zIndex: 6
   },
   name: {
+    color: "white",
     fontSize: 32,
     fontWeight: 'bold',
     marginTop: 10,
-    color: "white",
     textShadowColor: '#333',
     textShadowRadius: 5,
   },
   age: {
-    fontSize: 26,
     color: "white",
+    fontSize: 26,
     textShadowColor: '#333',
     textShadowRadius: 5,
   },
@@ -166,10 +235,16 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   details: {
-    fontSize: 20,
     color: "white",
+    fontSize: 20,
     textShadowColor: '#333',
     textShadowRadius: 5,
+  },
+
+  bottomWrapper: {
+    transformOrigin: 'top',
+    width: '100%',
+    zIndex: 1,
   },
 
   aboutContainer: {

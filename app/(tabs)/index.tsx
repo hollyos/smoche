@@ -5,14 +5,17 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
 import { ProfileCard } from '@/components/ProfileCard';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import ProfileList from '@/components/ProfileList';
 import { profiles } from '@/stores/profileStore'
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView style={styles.container}>
-      <ProfileList profiles={profiles} />
-    </SafeAreaView>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaView style={styles.container}>
+        <ProfileList profiles={profiles} />
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
 }
 
