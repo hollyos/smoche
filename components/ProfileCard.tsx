@@ -1,14 +1,14 @@
-import { FC, useEffect, useState } from 'react';
-import { FlatList, View, Text, StyleSheet, Dimensions, Image } from 'react-native';
-import { Pill } from './Pill';
 import { Profile } from '@/stores/profileStore';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { Dimensions, Image, LayoutChangeEvent, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Animated, {
+  Easing,
+  useAnimatedStyle,
   useSharedValue,
   withTiming,
-  useAnimatedStyle,
-  Easing,
 } from 'react-native-reanimated';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { PillList } from './PillList';
 
 /**
  * Props interface for the ProfileCard component.
@@ -56,6 +56,9 @@ export const ProfileCard: FC<ProfileCardProps> = ({ profile, onLike, onDislike, 
    */
   const [detailsVisible, setDetailsVisible] = useState(false);
 
+  // Ref to store the measured height of the details section
+  const contentHeightRef = useRef<number>(0);
+
   /**
    * Holds window and screen dimensions to adapt layout dynamically based on screen size changes.
    */
@@ -71,8 +74,8 @@ export const ProfileCard: FC<ProfileCardProps> = ({ profile, onLike, onDislike, 
    * Utilizes `useSharedValue` and `withTiming` for smooth transitions.
    */
   const detailsPaddingBottom = useSharedValue(0);
-  const detailsHeightScale = useSharedValue(0);
-  const detailsHeight = useSharedValue(400);
+  const detailsTranslateY = useSharedValue(0);
+  const detailsOpacity = useSharedValue(0);
 
   /**
    * Configuration for animation, specifying easing and duration.
@@ -88,12 +91,17 @@ export const ProfileCard: FC<ProfileCardProps> = ({ profile, onLike, onDislike, 
    */
   const animatedStyles = useAnimatedStyle(() => {
     return {
-      height: detailsHeight.value,
-      maxHeight: detailsHeight.value,
       paddingBottom: detailsPaddingBottom.value,
-      transform: [{ scaleY: detailsHeightScale.value }],
+      transform: [{ translateY: detailsTranslateY.value }],
+      opacity: detailsOpacity.value,
     };
   });
+
+  // Handle layout event to measure the content's height
+  const handleContentLayout = useCallback((event: LayoutChangeEvent) => {
+    const { height } = event.nativeEvent.layout;
+    contentHeightRef.current = height; // Store the measured height in ref
+  }, []);
 
   /**
    * Effect hook to initialize animation values when `detailsVisible` is toggled.
@@ -101,13 +109,13 @@ export const ProfileCard: FC<ProfileCardProps> = ({ profile, onLike, onDislike, 
    */
   useEffect(() => {
     if (detailsVisible) {
-      detailsPaddingBottom.value = withTiming(15, config);
-      detailsHeightScale.value = withTiming(1, config);
-      detailsHeight.value = withTiming(400, config);
+      detailsPaddingBottom.value = withTiming(contentHeightRef.current + 14, config);
+      detailsTranslateY.value = withTiming(0, config);
+      detailsOpacity.value = withTiming(1, config);
     } else {
       detailsPaddingBottom.value = withTiming(0, config);
-      detailsHeightScale.value = withTiming(0, config);
-      detailsHeight.value = withTiming(0, config);
+      detailsTranslateY.value = withTiming(-contentHeightRef.current, config);
+      detailsOpacity.value = withTiming(0, config);
     }
   }, [detailsVisible])
 
@@ -127,7 +135,7 @@ export const ProfileCard: FC<ProfileCardProps> = ({ profile, onLike, onDislike, 
 
   return (
     <View style={styles.card}>
-      <TouchableOpacity onPress={() => setDetailsVisible(!detailsVisible)} style={styles.imageContainer}>
+      <TouchableOpacity onPress={() => setDetailsVisible(!detailsVisible)} style={styles.imageContainer} activeOpacity={0.95}>
         <Image source={{ uri: profile.photos[0].url }} style={{ width: dimensions.screen.width, height: 500 }} />
 
         <View style={styles.basicsContainer}>
@@ -141,34 +149,15 @@ export const ProfileCard: FC<ProfileCardProps> = ({ profile, onLike, onDislike, 
         </View>
       </TouchableOpacity>
 
-      <Animated.View style={[styles.bottomWrapper, animatedStyles]}>
-        <View style={styles.aboutContainer}>
-          <Text style={styles.subtitle}>About</Text>
-          <Text style={styles.about}>{profile.info.about}</Text>
-        </View>
+      <Animated.View style={[styles.bottomAnimationWrapper, animatedStyles]}>
+        <View onLayout={handleContentLayout} style={styles.bottomWrapper}>
+          <View style={styles.aboutContainer}>
+            <Text style={styles.subtitle}>About</Text>
+            <Text style={styles.about}>{profile.info.about}</Text>
+          </View>
 
-        <View style={{ paddingHorizontal: 14, marginVertical: 6 }}>
-          <Text style={styles.subtitle}>Desires</Text>
-          <FlatList
-            data={profile.info.desires}
-            renderItem={({ item }) => (
-              <Pill>{item}</Pill>
-            )}
-            keyExtractor={(item) => item}
-            style={styles.pillRow}
-          />
-        </View>
-
-        <View style={{ paddingHorizontal: 14, marginVertical: 6 }}>
-          <Text style={styles.subtitle}>Interests</Text>
-          <FlatList
-            data={profile.info.interests}
-            renderItem={({ item }) => (
-              <Pill>{item}</Pill>
-            )}
-            keyExtractor={(item) => item}
-            style={styles.pillRow}
-          />
+          <PillList data={profile.info.desires} title="Desires" />
+          <PillList data={profile.info.interests} title="Interests" />
         </View>
       </Animated.View>
     </View>
@@ -197,7 +186,6 @@ const styles = StyleSheet.create({
 
   imageContainer: {
     position: 'relative',
-    zIndex: 5,
   },
 
   /**
@@ -241,10 +229,16 @@ const styles = StyleSheet.create({
     textShadowRadius: 5,
   },
 
-  bottomWrapper: {
+  bottomAnimationWrapper: {
+    position: 'relative',
     transformOrigin: 'top',
     width: '100%',
-    zIndex: 1,
+    zIndex: -1,
+  },
+
+  bottomWrapper: {
+    position: 'absolute',
+    width: '100%',
   },
 
   aboutContainer: {
@@ -266,16 +260,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 14,
     width: "100%",
-  },
-
-  pillRow: {
-    alignContent: 'center',
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-    maxWidth: '100%',
   },
 
   subtitle: {
