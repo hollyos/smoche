@@ -9,6 +9,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { PillList } from './PillList';
+import GallerySwiper from 'react-native-gallery-swiper';
 
 /**
  * Props interface for the ProfileCard component.
@@ -136,7 +137,14 @@ export const ProfileCard: FC<ProfileCardProps> = ({ profile, onLike, onDislike, 
   return (
     <View style={styles.card}>
       <TouchableOpacity onPress={() => setDetailsVisible(!detailsVisible)} style={styles.imageContainer} activeOpacity={0.95}>
-        <Image source={{ uri: profile.photos[0].url }} style={{ width: dimensions.screen.width, height: 500 }} />
+        <GallerySwiper
+          images={profile.photos}
+          initialPage={0}
+          enableScale={false}
+          resizeMode="contain"
+          style={{ maxWidth: dimensions.screen.width, height: 500, maxHeight: 500 }}
+          scrollViewStyle={{ backgroundColor: "#FFF", maxWidth: dimensions.screen.width, height: 500, maxHeight: 500 }}
+        />
 
         <View style={styles.basicsContainer}>
           <Text style={styles.name}>{profile.info.name},&nbsp;<Text style={styles.age}>{profile.info.age}</Text></Text>

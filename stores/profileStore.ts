@@ -1,3 +1,5 @@
+import TmpProfiles from "./profiles.json"
+
 /**
  * Represents a photo object in a user's profile.
  * Each photo contains a URL, width, and height.
@@ -54,7 +56,7 @@ export interface Profile {
 }
 
 export const profiles = [{
-  "id": "55be3c8fc964860700ebf515",
+  "id": "66be3c8fc964860700ebf515",
   "info": {
     "age": 20,
     "type": "single",
@@ -83,7 +85,7 @@ export const profiles = [{
     }
   ]
 }, {
-  "id": "55be3c8fc964860700ebf516",
+  "id": "66be3c8fc964860700ebf516",
   "info": {
     "age": 20,
     "type": "single",
@@ -120,7 +122,7 @@ export const profiles = [{
     }
   ]
 }, {
-  "id": "55be3c8fc964860700ebf518",
+  "id": "66be3c8fc964860700ebf518",
   "info": {
     "age": 20,
     "type": "coupled & open",
@@ -154,6 +156,11 @@ export const profiles = [{
       "url": "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
       "width": 605,
       "height": 907
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1580489944761-15a19d654956",
+      "width": 628,
+      "height": 790
     }
   ]
-}];
+}, ...TmpProfiles.data];
