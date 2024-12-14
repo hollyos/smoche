@@ -17,7 +17,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { PillList } from "./PillList";
-
+import { ImageGallery } from "./ImageGallery";
 // nanoid is not supported on native due to no crypto
 // this package adds the support for nanoid
 // I removed the nanoid import since it was not being used
@@ -84,16 +84,6 @@ export const ProfileCard: FC<ProfileCardProps> = ({
   const contentHeightRef = useRef<number>(0);
 
   /**
-   * Holds window and screen dimensions to adapt layout dynamically based on screen size changes.
-   */
-  const windowDimensions = Dimensions.get("window");
-  const screenDimensions = Dimensions.get("screen");
-  const [dimensions, setDimensions] = useState({
-    window: windowDimensions,
-    screen: screenDimensions,
-  });
-
-  /**
    * Animation properties for expanding/collapsing profile details.
    * Utilizes `useSharedValue` and `withTiming` for smooth transitions.
    */
@@ -146,52 +136,6 @@ export const ProfileCard: FC<ProfileCardProps> = ({
     }
   }, [detailsVisible]);
 
-  /**
-   * Effect hook to handle dimension changes dynamically.
-   * Updates state when screen or window dimensions change.
-   */
-  useEffect(() => {
-    const subscription = Dimensions.addEventListener(
-      "change",
-      ({ window, screen }) => {
-        setDimensions({ window, screen });
-      },
-    );
-    return () => subscription?.remove();
-  }, []);
-
-  // Create a memoized image component
-  const MemoizedImage = memo(
-    ({ item }: { item: { url: string; height: number; width: number } }) => (
-      <View style={{ backgroundColor: "white", height: 500, width: 500 }}>
-        <Image
-          source={{ uri: item.url }}
-          style={{
-            width: 500,
-            height: 500,
-            resizeMode: "cover",
-            maxWidth: dimensions.screen.width,
-            top: 0,
-            left: 0,
-          }}
-        />
-      </View>
-    ),
-  );
-
-  /**
-   * renderItem is wrapped with useCallback with no dependencies, so it will never change once set.
-   * This is to prevent re-rendering of the image on scroll.
-   */
-  const renderItem = useCallback(
-    ({ item }) => (
-      <TouchableOpacity onPress={toggleRef.current} activeOpacity={0.95}>
-        <MemoizedImage item={item} />
-      </TouchableOpacity>
-    ),
-    [],
-  );
-
   return (
     <View style={styles.card}>
       {/* <GallerySwiper
@@ -218,21 +162,8 @@ export const ProfileCard: FC<ProfileCardProps> = ({
           width: dimensions.screen.width
         }}
       /> */}
-      <FlatList
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator
-        decelerationRate="fast"
-        data={profile.photos}
-        removeClippedSubviews={false}
-        scrollEnabled
-        maxToRenderPerBatch={1}
-        windowSize={3}
-        initialNumToRender={1}
-        showsVerticalScrollIndicator={false}
-        keyExtractor={(item, index) => `${index}${item.url}`}
-        renderItem={renderItem}
-      />
+
+      <ImageGallery images={profile.photos} onPress={toggleRef.current} />
 
       <TouchableOpacity
         onPress={() => setDetailsVisible(!detailsVisible)}
