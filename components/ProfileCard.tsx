@@ -210,7 +210,10 @@ export const ProfileCard: FC<ProfileCardProps> = ({
                 onPress={onLike}
                 style={{ ...styles.button, backgroundColor: "green" }}
               >
-                <FontAwesomeIcon icon={faThumbsUp} style={{ outline: "none" }} />
+                <FontAwesomeIcon
+                  icon={faThumbsUp}
+                  style={{ outline: "none" }}
+                />
               </TouchableOpacity>
             </View>
           </View>
@@ -275,8 +278,8 @@ const styles = StyleSheet.create({
     zIndex: 6,
   },
   basicsContainerInner: {
-    alignContent: 'stretch', 
-    alignItems: 'stretch',
+    alignContent: "stretch",
+    alignItems: "stretch",
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 14,
