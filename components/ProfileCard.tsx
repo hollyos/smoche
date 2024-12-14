@@ -8,6 +8,7 @@ import {
   View,
   Image,
   Platform,
+  Button,
 } from "react-native";
 import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 import Animated, {
@@ -18,6 +19,10 @@ import Animated, {
 } from "react-native-reanimated";
 import { PillList } from "./PillList";
 import { ImageGallery } from "./ImageGallery";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faThumbsUp } from "@fortawesome/free-solid-svg-icons/faThumbsUp";
+import { faThumbsDown } from "@fortawesome/free-solid-svg-icons/faThumbsDown";
+
 // nanoid is not supported on native due to no crypto
 // this package adds the support for nanoid
 // I removed the nanoid import since it was not being used
@@ -50,12 +55,6 @@ export interface ProfileCardProps {
    * Triggers a dislike action for the user's profile.
    */
   onDislike: () => void;
-
-  /**
-   * Function to call when the "Details" button is pressed.
-   * Opens a detailed view of the user's profile.
-   */
-  onDetails: () => void;
 }
 
 /**
@@ -71,14 +70,16 @@ export const ProfileCard: FC<ProfileCardProps> = ({
   profile,
   onLike,
   onDislike,
-  onDetails,
 }) => {
   /**
    * State variable to manage the visibility of additional profile details.
    * Set to true when details are expanded, false otherwise.
    */
   const [detailsVisible, setDetailsVisible] = useState(false);
-  const toggleRef = useRef(() => setDetailsVisible((prev) => !prev));
+  const toggleRef = useRef(() => {
+    console.log("toggleRef");
+    setDetailsVisible((prev) => !prev);
+  });
 
   // Ref to store the measured height of the details section
   const contentHeightRef = useRef<number>(0);
@@ -166,23 +167,52 @@ export const ProfileCard: FC<ProfileCardProps> = ({
       <ImageGallery images={profile.photos} onPress={toggleRef.current} />
 
       <TouchableOpacity
-        onPress={() => setDetailsVisible(!detailsVisible)}
+        onPress={toggleRef.current}
         style={styles.imageContainer}
-        activeOpacity={0.95}
         hitSlop={{ bottom: 6 }}
-        delayPressIn={0}
-        pressRetentionOffset={{ top: 0, left: 0, bottom: 0, right: 0 }}
       >
         <View style={styles.basicsContainer}>
-          <Text style={styles.name}>
-            {profile.info.name},&nbsp;
-            <Text style={styles.age}>{profile.info.age}</Text>
-          </Text>
+          <View style={styles.basicsContainerInner}>
+            <View style={{ flexShrink: 1 }}>
+              <Text style={styles.name}>
+                {profile.info.name},&nbsp;
+                <Text style={styles.age}>{profile.info.age}</Text>
+              </Text>
 
-          <View style={{ ...styles.row, ...styles.detailsContainer }}>
-            <Text style={styles.details}>{profile.info.type}</Text>
-            <Text style={styles.details}>{profile.info.gender}</Text>
-            <Text style={styles.details}>{profile.info.sexuality}</Text>
+              <View style={{ ...styles.row, ...styles.detailsContainer }}>
+                <Text style={styles.details}>{profile.info.type}</Text>
+                <Text style={styles.details}>{profile.info.gender}</Text>
+                <Text style={styles.details}>{profile.info.sexuality}</Text>
+              </View>
+            </View>
+
+            <View
+              style={{
+                alignContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                gap: 20,
+                height: "100%",
+                minHeight: "100%",
+              }}
+            >
+              <TouchableOpacity
+                onPress={onDislike}
+                style={{ ...styles.button, backgroundColor: "red" }}
+              >
+                <FontAwesomeIcon
+                  icon={faThumbsDown}
+                  style={{ outline: "none" }}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={onLike}
+                style={{ ...styles.button, backgroundColor: "green" }}
+              >
+                <FontAwesomeIcon icon={faThumbsUp} style={{ outline: "none" }} />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </TouchableOpacity>
@@ -220,7 +250,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 5,
     marginBottom: 15,
-    maxWidth: 500,
+    maxWidth: "100%",
     width: 500,
   },
 
@@ -235,13 +265,23 @@ const styles = StyleSheet.create({
   basicsContainer: {
     backgroundColor: "rgba(66,66,66,0.45)",
     bottom: 0,
-    paddingHorizontal: 14,
+    flexDirection: "row",
+    justifyContent: "space-between",
     position: "absolute",
     shadowColor: "#333",
     shadowOffset: { height: -3, width: 0 },
     shadowOpacity: 0.3,
     width: "100%",
     zIndex: 6,
+  },
+  basicsContainerInner: {
+    alignContent: 'stretch', 
+    alignItems: 'stretch',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 14,
+    position: "relative",
+    width: "100%",
   },
   name: {
     color: "white",
@@ -305,5 +345,12 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 14,
     fontWeight: "bold",
+  },
+
+  button: {
+    padding: 24,
+    cursor: "pointer",
+    backgroundColor: "green",
+    borderRadius: 100,
   },
 });

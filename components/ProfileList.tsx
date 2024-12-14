@@ -14,6 +14,7 @@ export const ProfileList: FC<ProfileListProps> = ({ profiles }) => {
    * @param {string} id - The unique identifier of the profile to like.
    */
   const handleLike = (id: string): void => {
+    console.log("like", id);
     // likeProfile(id);
   };
 
@@ -23,16 +24,8 @@ export const ProfileList: FC<ProfileListProps> = ({ profiles }) => {
    * @param {string} id - The unique identifier of the profile to dislike.
    */
   const handleDislike = (id: string): void => {
+    console.log("dislike", id);
     // dislikeProfile(id);
-  };
-
-  /**
-   * Handler function to view profile details.
-   *
-   * @param {string} id - The unique identifier of the profile to view details for.
-   */
-  const handleDetails = (id: string): void => {
-    console.log(`View details for profile id: ${id}`);
   };
 
   /**
@@ -56,7 +49,6 @@ export const ProfileList: FC<ProfileListProps> = ({ profiles }) => {
           profile={item}
           onLike={() => handleLike(item.id)}
           onDislike={() => handleDislike(item.id)}
-          onDetails={() => handleDetails(item.id)}
         />
       )}
     />

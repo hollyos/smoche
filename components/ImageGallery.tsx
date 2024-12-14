@@ -40,23 +40,21 @@ export const ImageGallery: FC<ImageGalleryProps> = ({ images, onPress }) => {
   /**
    * Memoized image component to prevent re-rendering of the image on scroll.
    */
-  const MemoizedImage = memo(
-    ({ item }: { item: Photo }) => (
-      <View style={{ backgroundColor: "white", height: 500, width: 500 }}>
-        <Image
-          source={{ uri: item.url }}
-          style={{
-            width: 500,
-            height: 500,
-            resizeMode: "cover",
-            maxWidth: dimensions.screen.width,
-            top: 0,
-            left: 0,
-          }}
-        />
-      </View>
-    ),
-  );
+  const MemoizedImage = memo(({ item }: { item: Photo }) => (
+    <View style={{ backgroundColor: "white", height: 500, width: 500 }}>
+      <Image
+        source={{ uri: item.url }}
+        style={{
+          width: 500,
+          height: 500,
+          resizeMode: "cover",
+          maxWidth: dimensions.screen.width,
+          top: 0,
+          left: 0,
+        }}
+      />
+    </View>
+  ));
 
   /**
    * renderItem is wrapped with useCallback with no dependencies, so it will never change once set.
