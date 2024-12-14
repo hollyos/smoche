@@ -22,6 +22,7 @@ import { ImageGallery } from "./ImageGallery";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faThumbsUp } from "@fortawesome/free-solid-svg-icons/faThumbsUp";
 import { faThumbsDown } from "@fortawesome/free-solid-svg-icons/faThumbsDown";
+import Colors from "../styles/colors";
 
 // nanoid is not supported on native due to no crypto
 // this package adds the support for nanoid
@@ -198,7 +199,7 @@ export const ProfileCard: FC<ProfileCardProps> = ({
             >
               <TouchableOpacity
                 onPress={onDislike}
-                style={{ ...styles.button, backgroundColor: "red" }}
+                style={{ ...styles.button, backgroundColor: Colors.red }}
               >
                 <FontAwesomeIcon
                   icon={faThumbsDown}
@@ -208,7 +209,7 @@ export const ProfileCard: FC<ProfileCardProps> = ({
 
               <TouchableOpacity
                 onPress={onLike}
-                style={{ ...styles.button, backgroundColor: "green" }}
+                style={{ ...styles.button, backgroundColor: Colors.green }}
               >
                 <FontAwesomeIcon
                   icon={faThumbsUp}
@@ -227,8 +228,16 @@ export const ProfileCard: FC<ProfileCardProps> = ({
             <Text style={styles.about}>{profile.info.about}</Text>
           </View>
 
-          <PillList data={profile.info.desires} title="Desires" />
-          <PillList data={profile.info.interests} title="Interests" />
+          <PillList
+            data={profile.info.desires}
+            title="Desires"
+            pillColor={Colors.purple}
+          />
+          <PillList
+            data={profile.info.interests}
+            title="Interests"
+            pillColor={Colors.yellow}
+          />
         </View>
       </Animated.View>
     </View>
@@ -245,10 +254,10 @@ const styles = StyleSheet.create({
    * Defines padding, background color, and border radius for the card.
    */
   card: {
-    backgroundColor: "#ffffff",
+    backgroundColor: Colors.tanLight2,
     borderRadius: 10,
 
-    shadowColor: "#000",
+    shadowColor: Colors.fontColorDark,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
@@ -266,12 +275,12 @@ const styles = StyleSheet.create({
    * Uses bold font for prominence.
    */
   basicsContainer: {
-    backgroundColor: "rgba(66,66,66,0.45)",
+    backgroundColor: "rgba(61, 64, 91, 0.45)",
     bottom: 0,
     flexDirection: "row",
     justifyContent: "space-between",
     position: "absolute",
-    shadowColor: "#333",
+    shadowColor: Colors.blue,
     shadowOffset: { height: -3, width: 0 },
     shadowOpacity: 0.3,
     width: "100%",
@@ -287,17 +296,17 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   name: {
-    color: "white",
+    color: Colors.fontColorLight,
     fontSize: 32,
     fontWeight: "bold",
     marginTop: 10,
-    textShadowColor: "#333",
+    textShadowColor: Colors.blue,
     textShadowRadius: 5,
   },
   age: {
-    color: "white",
+    color: Colors.fontColorLight,
     fontSize: 26,
-    textShadowColor: "#333",
+    textShadowColor: Colors.blue,
     textShadowRadius: 5,
   },
 
@@ -306,9 +315,9 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   details: {
-    color: "white",
+    color: Colors.fontColorLight,
     fontSize: 20,
-    textShadowColor: "#333",
+    textShadowColor: Colors.blue,
     textShadowRadius: 5,
   },
 
@@ -325,7 +334,7 @@ const styles = StyleSheet.create({
   },
 
   aboutContainer: {
-    backgroundColor: "#F0F0F0",
+    backgroundColor: Colors.tan,
     paddingHorizontal: 14,
     paddingVertical: 20,
   },
@@ -351,9 +360,9 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    padding: 24,
-    cursor: "pointer",
-    backgroundColor: "green",
+    backgroundColor: Colors.purple,
     borderRadius: 100,
+    cursor: "pointer",
+    padding: 24,
   },
 });

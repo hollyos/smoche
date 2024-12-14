@@ -5,15 +5,16 @@ import { Pill } from "./Pill";
 export interface PillListProps extends ViewProps {
   data: any[];
   title: string;
+  pillColor: string;
 }
 
-export const PillList: FC<PillListProps> = ({ data, title }) => {
+export const PillList: FC<PillListProps> = ({ pillColor, data, title }) => {
   return (
     <View style={{ paddingHorizontal: 14, marginVertical: 6 }}>
       <Text style={styles.subtitle}>{title}</Text>
       <FlatList
         data={data}
-        renderItem={({ item }) => <Pill>{item}</Pill>}
+        renderItem={({ item }) => <Pill pillColor={pillColor}>{item}</Pill>}
         keyExtractor={(item) => item}
         style={styles.pillRow}
       />

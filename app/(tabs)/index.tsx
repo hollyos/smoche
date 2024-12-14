@@ -14,6 +14,7 @@ import { ProfileCard } from "@/components/ProfileCard";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ProfileList from "@/components/ProfileList";
 import { profiles } from "@/stores/profileStore";
+import Colors from "../../styles/colors";
 
 export default function HomeScreen() {
   return (
@@ -27,7 +28,7 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#FFF",
+    backgroundColor: Colors.tanLight2,
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
