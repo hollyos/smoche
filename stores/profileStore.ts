@@ -1,4 +1,4 @@
-import TmpProfiles from "./profiles.json"
+import TmpProfiles from "./profiles.json";
 
 /**
  * Represents a photo object in a user's profile.
@@ -55,112 +55,160 @@ export interface Profile {
   // disliked?: boolean;
 }
 
-export const profiles = [{
-  "id": "66be3c8fc964860700ebf515",
-  "info": {
-    "age": 20,
-    "type": "single",
-    "gender": "male",
-    "sexuality": "straight",
-    "name": "John",
-    // a short text about them
-    "about": "\"Tell us more about you\"",
-    // a list of desires
-    "desires": [
-      "Relationship",
-      "Casual",
-    ],
-    // a list of tags they're interested in
-    "interests": [
-      "Food",
-      "Video Games",
-    ]
-  },
-  "associated": null, // if they're a couple, this will be populated
-  "photos": [ // this will be a list of zero or more photos
-    {
-      "url": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61",
-      "width": 1480,
-      "height": 1480
-    }
-  ]
-}, {
-  "id": "66be3c8fc964860700ebf516",
-  "info": {
-    "age": 20,
-    "type": "single",
-    "gender": "female",
-    "sexuality": "straight",
-    "name": "Kirra",
-    // a short text about them
-    "about": "\"Tell us more about you\"",
-    // a list of desires
-    "desires": [
-      "Long-Term Relationship",
-      "Casual",
-      "Short-Term Relationship",
-      "Single 4 Couple",
-      "Single 4 Single",
-    ],
-    // a list of tags they're interested in
-    "interests": [
-      "Art",
-      "Reading",
-      "DIY",
-      "Kyacking",
-      "Drawing",
-      "Climbing",
-      "Adventure"
-    ]
-  },
-  "associated": null, // if they're a couple, this will be populated
-  "photos": [ // this will be a list of zero or more photos
-    {
-      "url": "https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453",
-      "width": 605,
-      "height": 907
-    }
-  ]
-}, {
-  "id": "66be3c8fc964860700ebf518",
-  "info": {
-    "age": 20,
-    "type": "coupled & open",
-    "gender": "trans female",
-    "sexuality": "pansexual polyamorous",
-    "name": "Sara",
-    // a short text about them
-    "about": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-    // a list of desires
-    "desires": [
-      "Long-Term Relationship",
-      "Casual",
-      "Short-Term Relationship",
-      "Single 4 Couple",
-      "Single 4 Single",
-    ],
-    // a list of tags they're interested in
-    "interests": [
-      "Art",
-      "Reading",
-      "DIY",
-      "Kyacking",
-      "Drawing",
-      "Climbing",
-      "Adventure"
-    ]
-  },
-  "associated": null, // if they're a couple, this will be populated
-  "photos": [ // this will be a list of zero or more photos
-    {
-      "url": "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
-      "width": 605,
-      "height": 907
+export const profiles = [
+  {
+    id: "66be3c8fc964860700ebf515",
+    info: {
+      age: 20,
+      type: "single",
+      gender: "male",
+      sexuality: "straight",
+      name: "John",
+      // a short text about them
+      about: '"Tell us more about you"',
+      // a list of desires
+      desires: ["Relationship", "Casual"],
+      // a list of tags they're interested in
+      interests: ["Food", "Video Games"],
     },
-    {
-      "url": "https://images.unsplash.com/photo-1580489944761-15a19d654956",
-      "width": 628,
-      "height": 790
-    }
-  ]
-}, ...TmpProfiles.data];
+    associated: null, // if they're a couple, this will be populated
+    photos: [
+      // this will be a list of zero or more photos
+      {
+        url: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61",
+        width: 1480,
+        height: 1480,
+      },
+    ],
+  },
+  {
+    id: "66be3c8fc964860700ebf516",
+    info: {
+      age: 20,
+      type: "single",
+      gender: "female",
+      sexuality: "straight",
+      name: "Kirra",
+      // a short text about them
+      about: '"Tell us more about you"',
+      // a list of desires
+      desires: [
+        "Long-Term Relationship",
+        "Casual",
+        "Short-Term Relationship",
+        "Single 4 Couple",
+        "Single 4 Single",
+      ],
+      // a list of tags they're interested in
+      interests: [
+        "Art",
+        "Reading",
+        "DIY",
+        "Kyacking",
+        "Drawing",
+        "Climbing",
+        "Adventure",
+      ],
+    },
+    associated: null, // if they're a couple, this will be populated
+    photos: [
+      // this will be a list of zero or more photos
+      {
+        url: "https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453",
+        width: 605,
+        height: 907,
+      },
+    ],
+  },
+  {
+    id: "66be3c8fc964860700ebf518",
+    info: {
+      age: 20,
+      type: "coupled & open",
+      gender: "trans female",
+      sexuality: "pansexual polyamorous",
+      name: "Sara",
+      // a short text about them
+      about:
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+      // a list of desires
+      desires: [
+        "Long-Term Relationship",
+        "Casual",
+        "Short-Term Relationship",
+        "Single 4 Couple",
+        "Single 4 Single",
+      ],
+      // a list of tags they're interested in
+      interests: [
+        "Art",
+        "Reading",
+        "DIY",
+        "Kyacking",
+        "Drawing",
+        "Climbing",
+        "Adventure",
+      ],
+    },
+    associated: null, // if they're a couple, this will be populated
+    photos: [
+      // this will be a list of zero or more photos
+      {
+        url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+        width: 605,
+        height: 907,
+      },
+      {
+        url: "https://images.unsplash.com/photo-1580489944761-15a19d654956",
+        width: 628,
+        height: 790,
+      },
+    ],
+  },
+  {
+    id: "66be3c8fc964860700ebf5db",
+    info: {
+      age: 20,
+      type: "coupled & open",
+      gender: "trans female",
+      sexuality: "pansexual polyamorous",
+      name: "Tasha",
+      // a short text about them
+      about:
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+      // a list of desires
+      desires: [
+        "Long-Term Relationship",
+        "Casual",
+        "Short-Term Relationship",
+        "Single 4 Couple",
+        "Single 4 Single",
+      ],
+      // a list of tags they're interested in
+      interests: [
+        "Art",
+        "Reading",
+        "DIY",
+        "Kyacking",
+        "Drawing",
+        "Climbing",
+        "Adventure",
+      ],
+    },
+    associated: null, // if they're a couple, this will be populated
+    photos: [
+      // this will be a list of zero or more photos
+      {
+        url: "https://plus.unsplash.com/premium_photo-1712844070146-7d385e62934f",
+        width: 763,
+        height: 509,
+      },
+      {
+        url: "https://plus.unsplash.com/premium_photo-1712844069832-6b4ea9dfb6d8",
+        width: 440,
+        height: 659,
+      },
+    ],
+  },
+  ...TmpProfiles.data,
+];

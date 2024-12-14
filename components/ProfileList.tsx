@@ -1,7 +1,7 @@
-import { FC } from 'react';
-import { FlatList } from 'react-native';
-import { ProfileCard } from './ProfileCard';
-import { Profile } from '@/stores/profileStore'
+import { FC, useRef } from "react";
+import { ProfileCard } from "./ProfileCard";
+import { Profile } from "@/stores/profileStore";
+import { FlatList } from "react-native-gesture-handler";
 
 export interface ProfileListProps {
   profiles: Profile[];
@@ -42,6 +42,15 @@ export const ProfileList: FC<ProfileListProps> = ({ profiles }) => {
   return (
     <FlatList
       data={profiles}
+      keyExtractor={(item, index) => `${index}${item.id}`}
+      decelerationRate="fast"
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator
+      nestedScrollEnabled
+      shouldActivateOnStart
+      initialNumToRender={2}
+      scrollEnabled
+      scrollEventThrottle={16}
       renderItem={({ item }) => (
         <ProfileCard
           profile={item}
@@ -50,7 +59,6 @@ export const ProfileList: FC<ProfileListProps> = ({ profiles }) => {
           onDetails={() => handleDetails(item.id)}
         />
       )}
-      keyExtractor={(item) => item.id}
     />
   );
 };

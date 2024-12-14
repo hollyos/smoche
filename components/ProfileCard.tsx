@@ -1,15 +1,32 @@
-import { Profile } from '@/stores/profileStore';
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { Dimensions, Image, LayoutChangeEvent, StyleSheet, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Profile } from "@/stores/profileStore";
+import { FC, useCallback, useEffect, useRef, useState, memo } from "react";
+import {
+  Dimensions,
+  LayoutChangeEvent,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Platform,
+} from "react-native";
+import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 import Animated, {
   Easing,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
-import { PillList } from './PillList';
-import GallerySwiper from 'react-native-gallery-swiper';
+} from "react-native-reanimated";
+import { PillList } from "./PillList";
+
+// nanoid is not supported on native due to no crypto
+// this package adds the support for nanoid
+// I removed the nanoid import since it was not being used
+// import 'react-native-get-random-values';
+// import { nanoid } from 'nanoid';
+
+// I removed this GallerySwiper package since it was interfering with scrollability of the application.
+// I was able to achieve similar with the FlatList.
+// import GallerySwiper from 'react-native-gallery-swiper';
 
 /**
  * Props interface for the ProfileCard component.
@@ -50,12 +67,18 @@ export interface ProfileCardProps {
  * @param {ProfileCardProps} props - Properties passed to the component.
  * @returns {React.ReactElement} A card with profile information and action buttons.
  */
-export const ProfileCard: FC<ProfileCardProps> = ({ profile, onLike, onDislike, onDetails }) => {
+export const ProfileCard: FC<ProfileCardProps> = ({
+  profile,
+  onLike,
+  onDislike,
+  onDetails,
+}) => {
   /**
    * State variable to manage the visibility of additional profile details.
    * Set to true when details are expanded, false otherwise.
    */
   const [detailsVisible, setDetailsVisible] = useState(false);
+  const toggleRef = useRef(() => setDetailsVisible((prev) => !prev));
 
   // Ref to store the measured height of the details section
   const contentHeightRef = useRef<number>(0);
@@ -63,8 +86,8 @@ export const ProfileCard: FC<ProfileCardProps> = ({ profile, onLike, onDislike, 
   /**
    * Holds window and screen dimensions to adapt layout dynamically based on screen size changes.
    */
-  const windowDimensions = Dimensions.get('window');
-  const screenDimensions = Dimensions.get('screen');
+  const windowDimensions = Dimensions.get("window");
+  const screenDimensions = Dimensions.get("screen");
   const [dimensions, setDimensions] = useState({
     window: windowDimensions,
     screen: screenDimensions,
@@ -110,7 +133,10 @@ export const ProfileCard: FC<ProfileCardProps> = ({ profile, onLike, onDislike, 
    */
   useEffect(() => {
     if (detailsVisible) {
-      detailsPaddingBottom.value = withTiming(contentHeightRef.current + 14, config);
+      detailsPaddingBottom.value = withTiming(
+        contentHeightRef.current + 14,
+        config,
+      );
       detailsTranslateY.value = withTiming(0, config);
       detailsOpacity.value = withTiming(1, config);
     } else {
@@ -118,7 +144,7 @@ export const ProfileCard: FC<ProfileCardProps> = ({ profile, onLike, onDislike, 
       detailsTranslateY.value = withTiming(-contentHeightRef.current, config);
       detailsOpacity.value = withTiming(0, config);
     }
-  }, [detailsVisible])
+  }, [detailsVisible]);
 
   /**
    * Effect hook to handle dimension changes dynamically.
@@ -126,7 +152,7 @@ export const ProfileCard: FC<ProfileCardProps> = ({ profile, onLike, onDislike, 
    */
   useEffect(() => {
     const subscription = Dimensions.addEventListener(
-      'change',
+      "change",
       ({ window, screen }) => {
         setDimensions({ window, screen });
       },
@@ -134,20 +160,93 @@ export const ProfileCard: FC<ProfileCardProps> = ({ profile, onLike, onDislike, 
     return () => subscription?.remove();
   }, []);
 
+  // Create a memoized image component
+  const MemoizedImage = memo(
+    ({ item }: { item: { url: string; height: number; width: number } }) => (
+      <View style={{ backgroundColor: "white", height: 500, width: 500 }}>
+        <Image
+          source={{ uri: item.url }}
+          style={{
+            width: 500,
+            height: 500,
+            resizeMode: "cover",
+            maxWidth: dimensions.screen.width,
+            top: 0,
+            left: 0,
+          }}
+        />
+      </View>
+    ),
+  );
+
+  /**
+   * renderItem is wrapped with useCallback with no dependencies, so it will never change once set.
+   * This is to prevent re-rendering of the image on scroll.
+   */
+  const renderItem = useCallback(
+    ({ item }) => (
+      <TouchableOpacity onPress={toggleRef.current} activeOpacity={0.95}>
+        <MemoizedImage item={item} />
+      </TouchableOpacity>
+    ),
+    [],
+  );
+
   return (
     <View style={styles.card}>
-      <TouchableOpacity onPress={() => setDetailsVisible(!detailsVisible)} style={styles.imageContainer} activeOpacity={0.95}>
-        <GallerySwiper
-          images={profile.photos}
-          initialPage={0}
-          enableScale={false}
-          resizeMode="contain"
-          style={{ maxWidth: dimensions.screen.width, height: 500, maxHeight: 500 }}
-          scrollViewStyle={{ backgroundColor: "#FFF", maxWidth: dimensions.screen.width, height: 500, maxHeight: 500 }}
-        />
+      {/* <GallerySwiper
+        enableScale={false}
+        enableTranslate={false}
+        images={profile.photos}
+        initialPage={0}
+        maxOverScrollDistance={0}
+        onSingleTapConfirmed={() => {
+          setDetailsVisible(!detailsVisible);
+        }}
+        resizeMode="cover"
+        sensitiveScroll={false}
+        style={{
+          height: 500,
+          maxWidth: Platform.OS === 'web' ? 500 : dimensions.screen.width,
+          width: dimensions.screen.width
+        }}
+        scrollViewStyle={{
+          backgroundColor: "#FFF",
+          height: 500,
+          maxHeight: 500,
+          maxWidth: Platform.OS === 'web' ? 500 : dimensions.screen.width,
+          width: dimensions.screen.width
+        }}
+      /> */}
+      <FlatList
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator
+        decelerationRate="fast"
+        data={profile.photos}
+        removeClippedSubviews={false}
+        scrollEnabled
+        maxToRenderPerBatch={1}
+        windowSize={3}
+        initialNumToRender={1}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={(item, index) => `${index}${item.url}`}
+        renderItem={renderItem}
+      />
 
+      <TouchableOpacity
+        onPress={() => setDetailsVisible(!detailsVisible)}
+        style={styles.imageContainer}
+        activeOpacity={0.95}
+        hitSlop={{ bottom: 6 }}
+        delayPressIn={0}
+        pressRetentionOffset={{ top: 0, left: 0, bottom: 0, right: 0 }}
+      >
         <View style={styles.basicsContainer}>
-          <Text style={styles.name}>{profile.info.name},&nbsp;<Text style={styles.age}>{profile.info.age}</Text></Text>
+          <Text style={styles.name}>
+            {profile.info.name},&nbsp;
+            <Text style={styles.age}>{profile.info.age}</Text>
+          </Text>
 
           <View style={{ ...styles.row, ...styles.detailsContainer }}>
             <Text style={styles.details}>{profile.info.type}</Text>
@@ -182,18 +281,20 @@ const styles = StyleSheet.create({
    * Defines padding, background color, and border radius for the card.
    */
   card: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     borderRadius: 10,
-    position: 'relative',
-    shadowColor: '#000',
+
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
     marginBottom: 15,
+    maxWidth: 500,
+    width: 500,
   },
 
   imageContainer: {
-    position: 'relative',
+    position: "relative",
   },
 
   /**
@@ -201,28 +302,28 @@ const styles = StyleSheet.create({
    * Uses bold font for prominence.
    */
   basicsContainer: {
-    backgroundColor: 'rgba(66,66,66,0.45)',
+    backgroundColor: "rgba(66,66,66,0.45)",
     bottom: 0,
     paddingHorizontal: 14,
-    position: 'absolute',
-    shadowColor: '#333',
+    position: "absolute",
+    shadowColor: "#333",
     shadowOffset: { height: -3, width: 0 },
     shadowOpacity: 0.3,
-    width: '100%',
-    zIndex: 6
+    width: "100%",
+    zIndex: 6,
   },
   name: {
     color: "white",
     fontSize: 32,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginTop: 10,
-    textShadowColor: '#333',
+    textShadowColor: "#333",
     textShadowRadius: 5,
   },
   age: {
     color: "white",
     fontSize: 26,
-    textShadowColor: '#333',
+    textShadowColor: "#333",
     textShadowRadius: 5,
   },
 
@@ -233,20 +334,20 @@ const styles = StyleSheet.create({
   details: {
     color: "white",
     fontSize: 20,
-    textShadowColor: '#333',
+    textShadowColor: "#333",
     textShadowRadius: 5,
   },
 
   bottomAnimationWrapper: {
-    position: 'relative',
-    transformOrigin: 'top',
-    width: '100%',
+    position: "relative",
+    transformOrigin: "top",
+    width: "100%",
     zIndex: -1,
   },
 
   bottomWrapper: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
   },
 
   aboutContainer: {
@@ -261,17 +362,17 @@ const styles = StyleSheet.create({
    * Row container.
    */
   row: {
-    alignContent: 'flex-end',
-    alignItems: 'flex-end',
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    alignContent: "flex-end",
+    alignItems: "flex-end",
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 14,
     width: "100%",
   },
 
   subtitle: {
     fontSize: 14,
-    fontWeight: 'bold',
-  }
+    fontWeight: "bold",
+  },
 });
