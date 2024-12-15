@@ -1,6 +1,9 @@
 import { FC, memo, useCallback, useEffect, useState } from "react";
 import { Dimensions, Image, View } from "react-native";
-import { FlatList, TouchableWithoutFeedback } from "react-native-gesture-handler";
+import {
+  FlatList,
+  TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 import { Photo } from "../stores/profileStore";
 
 export interface ImageGalleryProps {
@@ -41,7 +44,14 @@ export const ImageGallery: FC<ImageGalleryProps> = ({ images, onPress }) => {
    * Memoized image component to prevent re-rendering of the image on scroll.
    */
   const MemoizedImage = memo(({ item }: { item: Photo }) => (
-    <View style={{ backgroundColor: "white", height: 500, width: 500, maxWidth: dimensions.screen.width }}>
+    <View
+      style={{
+        backgroundColor: "white",
+        height: 500,
+        width: 500,
+        maxWidth: dimensions.screen.width,
+      }}
+    >
       <Image
         source={{ uri: item.url }}
         style={{

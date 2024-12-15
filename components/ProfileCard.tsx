@@ -164,59 +164,65 @@ export const ProfileCard: FC<ProfileCardProps> = ({
       <ImageGallery images={profile.photos} onPress={toggleRef.current} />
 
       <View style={{ flex: 1 }} onStartShouldSetResponder={() => false}>
-      <TouchableWithoutFeedback
-        onPress={toggleRef.current}
-        style={styles.imageContainer}
-        hitSlop={{ bottom: 6 }}
-      >
-        <View style={styles.basicsContainer}>
-          <View style={styles.basicsContainerInner}>
-            <View style={{ flexShrink: 1 }}>
-              <ThemedText style={styles.name}>
-                {profile.info.name},&nbsp;
-                <ThemedText style={styles.age}>{profile.info.age}</ThemedText>
-              </ThemedText>
+        <TouchableWithoutFeedback
+          onPress={toggleRef.current}
+          style={styles.imageContainer}
+          hitSlop={{ bottom: 6 }}
+        >
+          <View style={styles.basicsContainer}>
+            <View style={styles.basicsContainerInner}>
+              <View style={{ flexShrink: 1 }}>
+                <ThemedText style={styles.name}>
+                  {profile.info.name},&nbsp;
+                  <ThemedText style={styles.age}>{profile.info.age}</ThemedText>
+                </ThemedText>
 
-              <View style={{ ...styles.row, ...styles.detailsContainer }}>
-                <ThemedText style={styles.details}>{profile.info.type}</ThemedText>
-                <ThemedText style={styles.details}>{profile.info.gender}</ThemedText>
-                <ThemedText style={styles.details}>{profile.info.sexuality}</ThemedText>
+                <View style={{ ...styles.row, ...styles.detailsContainer }}>
+                  <ThemedText style={styles.details}>
+                    {profile.info.type}
+                  </ThemedText>
+                  <ThemedText style={styles.details}>
+                    {profile.info.gender}
+                  </ThemedText>
+                  <ThemedText style={styles.details}>
+                    {profile.info.sexuality}
+                  </ThemedText>
+                </View>
+              </View>
+
+              <View
+                style={{
+                  alignContent: "center",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  gap: 20,
+                  height: "100%",
+                  minHeight: "100%",
+                }}
+              >
+                <TouchableOpacity
+                  onPress={onDislike}
+                  style={{ ...styles.button, backgroundColor: Colors.red }}
+                >
+                  <FontAwesomeIcon
+                    icon={faThumbsDown}
+                    style={{ outline: "none" }}
+                  />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={onLike}
+                  style={{ ...styles.button, backgroundColor: Colors.green }}
+                >
+                  <FontAwesomeIcon
+                    icon={faThumbsUp}
+                    style={{ outline: "none" }}
+                  />
+                </TouchableOpacity>
               </View>
             </View>
-
-            <View
-              style={{
-                alignContent: "center",
-                alignItems: "center",
-                flexDirection: "row",
-                gap: 20,
-                height: "100%",
-                minHeight: "100%",
-              }}
-            >
-              <TouchableOpacity
-                onPress={onDislike}
-                style={{ ...styles.button, backgroundColor: Colors.red }}
-              >
-                <FontAwesomeIcon
-                  icon={faThumbsDown}
-                  style={{ outline: "none" }}
-                />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={onLike}
-                style={{ ...styles.button, backgroundColor: Colors.green }}
-              >
-                <FontAwesomeIcon
-                  icon={faThumbsUp}
-                  style={{ outline: "none" }}
-                />
-              </TouchableOpacity>
-            </View>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
       </View>
 
       <Animated.View style={[styles.bottomAnimationWrapper, animatedStyles]}>
