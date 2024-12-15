@@ -1,13 +1,17 @@
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { Profile, profiles } from "@/stores/profileStore";
+import Colors from "@/styles/colors";
 import { FC } from "react";
+import { ViewProps } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { ProfileCard } from "./ProfileCard";
 
-export interface ProfileListProps {
-  profiles: Profile[];
-}
+export const ProfileList: FC<ViewProps> = () => {
+  const backgroundColor = useThemeColor(
+    { light: Colors.tanLight2, dark: Colors.tanDark2 },
+    "background",
+  );
 
-export const ProfileList: FC<ProfileListProps> = () => {
   /**
    * Handler function to like a profile.
    *
@@ -34,7 +38,7 @@ export const ProfileList: FC<ProfileListProps> = () => {
    */
   return (
     <FlatList
-      data={profiles}
+      data={profiles as Profile[]}
       keyExtractor={(item, index) => `${index}${item.id}`}
       decelerationRate="fast"
       showsHorizontalScrollIndicator={false}
@@ -44,6 +48,7 @@ export const ProfileList: FC<ProfileListProps> = () => {
       initialNumToRender={2}
       scrollEnabled
       scrollEventThrottle={16}
+      style={{ backgroundColor }}
       renderItem={({ item }) => (
         <ProfileCard
           profile={item}

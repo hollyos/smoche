@@ -6,6 +6,7 @@ import { FC, useCallback, useEffect, useRef, useState } from "react";
 import {
   LayoutChangeEvent,
   StyleSheet,
+  Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -16,10 +17,11 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import Colors from "../styles/colors";
 import { ImageGallery } from "./ImageGallery";
 import { PillList } from "./PillList";
 import { ThemedText } from "./ThemedText";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import Colors from "@/styles/colors";
 
 // nanoid is not supported on native due to no crypto
 // this package adds the support for nanoid
@@ -109,6 +111,15 @@ export const ProfileCard: FC<ProfileCardProps> = ({
     };
   });
 
+  const aboutBackgroundColor = useThemeColor(
+    { light: Colors.tanLight1, dark: Colors.tanDark1 },
+    "background",
+  );
+  const cardBackgroundColor = useThemeColor(
+    { light: Colors.tanLight2, dark: Colors.tanDark2Alt },
+    "background",
+  );
+
   // Handle layout event to measure the content's height
   const handleContentLayout = useCallback((event: LayoutChangeEvent) => {
     const { height } = event.nativeEvent.layout;
@@ -134,8 +145,10 @@ export const ProfileCard: FC<ProfileCardProps> = ({
     }
   }, [detailsVisible]);
 
+  // It would be nice to add an animation to the cards when pressed to go
+  // left/right depending on action pressed.
   return (
-    <View style={styles.card}>
+    <View style={{ ...styles.card, backgroundColor: cardBackgroundColor }}>
       {/* <GallerySwiper
         enableScale={false}
         enableTranslate={false}
@@ -163,30 +176,23 @@ export const ProfileCard: FC<ProfileCardProps> = ({
 
       <ImageGallery images={profile.photos} onPress={toggleRef.current} />
 
-      <View style={{ flex: 1 }} onStartShouldSetResponder={() => false}>
+      <View>
         <TouchableWithoutFeedback
           onPress={toggleRef.current}
-          style={styles.imageContainer}
           hitSlop={{ bottom: 6 }}
         >
           <View style={styles.basicsContainer}>
             <View style={styles.basicsContainerInner}>
               <View style={{ flexShrink: 1 }}>
-                <ThemedText style={styles.name}>
+                <Text style={styles.name}>
                   {profile.info.name},&nbsp;
-                  <ThemedText style={styles.age}>{profile.info.age}</ThemedText>
-                </ThemedText>
+                  <Text style={styles.age}>{profile.info.age}</Text>
+                </Text>
 
                 <View style={{ ...styles.row, ...styles.detailsContainer }}>
-                  <ThemedText style={styles.details}>
-                    {profile.info.type}
-                  </ThemedText>
-                  <ThemedText style={styles.details}>
-                    {profile.info.gender}
-                  </ThemedText>
-                  <ThemedText style={styles.details}>
-                    {profile.info.sexuality}
-                  </ThemedText>
+                  <Text style={styles.details}>{profile.info.type}</Text>
+                  <Text style={styles.details}>{profile.info.gender}</Text>
+                  <Text style={styles.details}>{profile.info.sexuality}</Text>
                 </View>
               </View>
 
@@ -206,6 +212,8 @@ export const ProfileCard: FC<ProfileCardProps> = ({
                 >
                   <FontAwesomeIcon
                     icon={faThumbsDown}
+                    // Type '{ outline?: string | undefined; }' is not assignable to type 'ViewStyle | TextStyle | ImageStyle'.
+                    // However, the FontAwesome SVG gets an outline on focus in web.
                     style={{ outline: "none" }}
                   />
                 </TouchableOpacity>
@@ -227,7 +235,12 @@ export const ProfileCard: FC<ProfileCardProps> = ({
 
       <Animated.View style={[styles.bottomAnimationWrapper, animatedStyles]}>
         <View onLayout={handleContentLayout} style={styles.bottomWrapper}>
-          <View style={styles.aboutContainer}>
+          <View
+            style={{
+              ...styles.aboutContainer,
+              backgroundColor: aboutBackgroundColor,
+            }}
+          >
             <ThemedText style={styles.subtitle}>About</ThemedText>
             <ThemedText style={styles.about}>{profile.info.about}</ThemedText>
           </View>
@@ -258,9 +271,7 @@ const styles = StyleSheet.create({
    * Defines padding, background color, and border radius for the card.
    */
   card: {
-    backgroundColor: Colors.tanLight2,
     borderRadius: 10,
-
     shadowColor: Colors.fontColorDark,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -300,7 +311,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   name: {
-    color: Colors.fontColorLight,
+    color: Colors.tanLight1,
     fontSize: 32,
     fontWeight: "bold",
     marginTop: 10,
@@ -308,7 +319,7 @@ const styles = StyleSheet.create({
     textShadowRadius: 5,
   },
   age: {
-    color: Colors.fontColorLight,
+    color: Colors.tanLight1,
     fontSize: 26,
     textShadowColor: Colors.blue,
     textShadowRadius: 5,
@@ -319,7 +330,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   details: {
-    color: Colors.fontColorLight,
+    color: Colors.tan,
     fontSize: 20,
     textShadowColor: Colors.blue,
     textShadowRadius: 5,
@@ -338,7 +349,6 @@ const styles = StyleSheet.create({
   },
 
   aboutContainer: {
-    backgroundColor: Colors.tan,
     paddingHorizontal: 14,
     paddingVertical: 20,
   },

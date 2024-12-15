@@ -1,7 +1,6 @@
 import { FC } from "react";
-import { StyleSheet, View, ViewProps } from "react-native";
+import { StyleSheet, Text, View, ViewProps } from "react-native";
 import Colors from "../styles/colors";
-import { ThemedText } from "./ThemedText";
 
 interface PillProps extends ViewProps {
   pillColor: string;
@@ -12,7 +11,7 @@ export const Pill: FC<PillProps> = ({ children, pillColor, ...props }) => (
     {...props}
     style={{ ...styles.pillContainer, backgroundColor: pillColor }}
   >
-    <ThemedText>{children}</ThemedText>
+    <Text>{children}</Text>
   </View>
 );
 
