@@ -1,8 +1,9 @@
 // ProfileList.tsx - Main component for displaying a list of user profiles with actions to like, dislike, or view details.
 import React, { useEffect } from 'react';
-import { View, ActivityIndicator, FlatList, Text } from 'react-native';
+import { ActivityIndicator, FlatList } from 'react-native';
 import ProfileCard from './ProfileCard';
 import useProfiles from './useProfiles';
+import { ThemedText } from './ThemedText';
 
 /**
  * ProfileList component displays a scrollable list of user profiles.
@@ -77,7 +78,7 @@ const ProfileList: React.FC = () => {
    * Renders an error message if there was an issue fetching profiles.
    * Displays the error text if `error` is not null.
    */
-  if (error) return <Text>Error: {error}</Text>;
+  if (error) return <ThemedText>Error: {error}</ThemedText>;
 
   /**
    * Renders the main list of profile cards using `FlatList`.

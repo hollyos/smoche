@@ -1,28 +1,25 @@
 import { Profile } from "@/stores/profileStore";
-import { FC, useCallback, useEffect, useRef, useState, memo } from "react";
+import { faThumbsDown } from "@fortawesome/free-solid-svg-icons/faThumbsDown";
+import { faThumbsUp } from "@fortawesome/free-solid-svg-icons/faThumbsUp";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import {
-  Dimensions,
   LayoutChangeEvent,
   StyleSheet,
-  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
-  Image,
-  Platform,
-  Button,
 } from "react-native";
-import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 import Animated, {
   Easing,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { PillList } from "./PillList";
-import { ImageGallery } from "./ImageGallery";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faThumbsUp } from "@fortawesome/free-solid-svg-icons/faThumbsUp";
-import { faThumbsDown } from "@fortawesome/free-solid-svg-icons/faThumbsDown";
 import Colors from "../styles/colors";
+import { ImageGallery } from "./ImageGallery";
+import { PillList } from "./PillList";
+import { ThemedText } from "./ThemedText";
 
 // nanoid is not supported on native due to no crypto
 // this package adds the support for nanoid
@@ -78,7 +75,6 @@ export const ProfileCard: FC<ProfileCardProps> = ({
    */
   const [detailsVisible, setDetailsVisible] = useState(false);
   const toggleRef = useRef(() => {
-    console.log("toggleRef");
     setDetailsVisible((prev) => !prev);
   });
 
@@ -167,7 +163,8 @@ export const ProfileCard: FC<ProfileCardProps> = ({
 
       <ImageGallery images={profile.photos} onPress={toggleRef.current} />
 
-      <TouchableOpacity
+      <View style={{ flex: 1 }} onStartShouldSetResponder={() => false}>
+      <TouchableWithoutFeedback
         onPress={toggleRef.current}
         style={styles.imageContainer}
         hitSlop={{ bottom: 6 }}
@@ -175,15 +172,15 @@ export const ProfileCard: FC<ProfileCardProps> = ({
         <View style={styles.basicsContainer}>
           <View style={styles.basicsContainerInner}>
             <View style={{ flexShrink: 1 }}>
-              <Text style={styles.name}>
+              <ThemedText style={styles.name}>
                 {profile.info.name},&nbsp;
-                <Text style={styles.age}>{profile.info.age}</Text>
-              </Text>
+                <ThemedText style={styles.age}>{profile.info.age}</ThemedText>
+              </ThemedText>
 
               <View style={{ ...styles.row, ...styles.detailsContainer }}>
-                <Text style={styles.details}>{profile.info.type}</Text>
-                <Text style={styles.details}>{profile.info.gender}</Text>
-                <Text style={styles.details}>{profile.info.sexuality}</Text>
+                <ThemedText style={styles.details}>{profile.info.type}</ThemedText>
+                <ThemedText style={styles.details}>{profile.info.gender}</ThemedText>
+                <ThemedText style={styles.details}>{profile.info.sexuality}</ThemedText>
               </View>
             </View>
 
@@ -219,13 +216,14 @@ export const ProfileCard: FC<ProfileCardProps> = ({
             </View>
           </View>
         </View>
-      </TouchableOpacity>
+      </TouchableWithoutFeedback>
+      </View>
 
       <Animated.View style={[styles.bottomAnimationWrapper, animatedStyles]}>
         <View onLayout={handleContentLayout} style={styles.bottomWrapper}>
           <View style={styles.aboutContainer}>
-            <Text style={styles.subtitle}>About</Text>
-            <Text style={styles.about}>{profile.info.about}</Text>
+            <ThemedText style={styles.subtitle}>About</ThemedText>
+            <ThemedText style={styles.about}>{profile.info.about}</ThemedText>
           </View>
 
           <PillList

@@ -1,26 +1,13 @@
-import {
-  Image,
-  StyleSheet,
-  Platform,
-  SafeAreaView,
-  StatusBar,
-} from "react-native";
-import { HelloWave } from "@/components/HelloWave";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-
-import { ProfileCard } from "@/components/ProfileCard";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ProfileList from "@/components/ProfileList";
-import { profiles } from "@/stores/profileStore";
+import { Platform, SafeAreaView, StatusBar, StyleSheet } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Colors from "../../styles/colors";
 
 export default function HomeScreen() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={styles.container}>
-        <ProfileList profiles={profiles} />
+        <ProfileList />
       </SafeAreaView>
     </GestureHandlerRootView>
   );

@@ -1,7 +1,7 @@
+import { FC, memo, useCallback, useEffect, useState } from "react";
+import { Dimensions, Image, View } from "react-native";
+import { FlatList, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { Photo } from "../stores/profileStore";
-import { FC, memo, useEffect, useCallback, useState, useRef } from "react";
-import { Dimensions, View, Image } from "react-native";
-import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 
 export interface ImageGalleryProps {
   images: Photo[];
@@ -41,16 +41,16 @@ export const ImageGallery: FC<ImageGalleryProps> = ({ images, onPress }) => {
    * Memoized image component to prevent re-rendering of the image on scroll.
    */
   const MemoizedImage = memo(({ item }: { item: Photo }) => (
-    <View style={{ backgroundColor: "white", height: 500, width: 500 }}>
+    <View style={{ backgroundColor: "white", height: 500, width: 500, maxWidth: dimensions.screen.width }}>
       <Image
         source={{ uri: item.url }}
         style={{
-          width: 500,
           height: 500,
-          resizeMode: "cover",
-          maxWidth: dimensions.screen.width,
-          top: 0,
           left: 0,
+          maxWidth: dimensions.screen.width,
+          resizeMode: "cover",
+          top: 0,
+          width: 500,
         }}
       />
     </View>
@@ -62,9 +62,9 @@ export const ImageGallery: FC<ImageGalleryProps> = ({ images, onPress }) => {
    */
   const renderItem = useCallback(
     ({ item }: { item: { url: string; height: number; width: number } }) => (
-      <TouchableOpacity onPress={onPress} activeOpacity={0.95}>
+      <TouchableWithoutFeedback onPress={onPress}>
         <MemoizedImage item={item} />
-      </TouchableOpacity>
+      </TouchableWithoutFeedback>
     ),
     [],
   );

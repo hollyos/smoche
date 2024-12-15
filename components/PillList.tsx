@@ -1,9 +1,10 @@
 import { FC } from "react";
-import { FlatList, StyleSheet, Text, View, ViewProps } from "react-native";
+import { FlatList, StyleSheet, View, ViewProps } from "react-native";
 import { Pill } from "./Pill";
+import { ThemedText } from "./ThemedText";
 
 export interface PillListProps extends ViewProps {
-  data: any[];
+  data: string[];
   title: string;
   pillColor: string;
 }
@@ -11,11 +12,11 @@ export interface PillListProps extends ViewProps {
 export const PillList: FC<PillListProps> = ({ pillColor, data, title }) => {
   return (
     <View style={{ paddingHorizontal: 14, marginVertical: 6 }}>
-      <Text style={styles.subtitle}>{title}</Text>
+      <ThemedText style={styles.subtitle}>{title}</ThemedText>
       <FlatList
         data={data}
         renderItem={({ item }) => <Pill pillColor={pillColor}>{item}</Pill>}
-        keyExtractor={(item) => item}
+        keyExtractor={(item, index) => `${index}`}
         style={styles.pillRow}
       />
     </View>

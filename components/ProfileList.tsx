@@ -1,13 +1,13 @@
-import { FC, useRef } from "react";
-import { ProfileCard } from "./ProfileCard";
-import { Profile } from "@/stores/profileStore";
+import { Profile, profiles } from "@/stores/profileStore";
+import { FC } from "react";
 import { FlatList } from "react-native-gesture-handler";
+import { ProfileCard } from "./ProfileCard";
 
 export interface ProfileListProps {
   profiles: Profile[];
 }
 
-export const ProfileList: FC<ProfileListProps> = ({ profiles }) => {
+export const ProfileList: FC<ProfileListProps> = () => {
   /**
    * Handler function to like a profile.
    *
