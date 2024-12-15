@@ -2,7 +2,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { Profile, profiles } from "@/stores/profileStore";
 import Colors from "@/styles/colors";
 import { FC } from "react";
-import { ViewProps } from "react-native";
+import { View, ViewProps } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { ProfileCard } from "./ProfileCard";
 
@@ -37,26 +37,28 @@ export const ProfileList: FC<ViewProps> = () => {
    * Maps each profile to a `ProfileCard` component, providing handlers for like, dislike, and details actions.
    */
   return (
-    <FlatList
-      data={profiles as Profile[]}
-      keyExtractor={(item, index) => `${index}${item.id}`}
-      decelerationRate="fast"
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator
-      nestedScrollEnabled
-      shouldActivateOnStart
-      initialNumToRender={2}
-      scrollEnabled
-      scrollEventThrottle={16}
-      style={{ backgroundColor }}
-      renderItem={({ item }) => (
-        <ProfileCard
-          profile={item}
-          onLike={() => handleLike(item.id)}
-          onDislike={() => handleDislike(item.id)}
-        />
-      )}
-    />
+    <View style={{ backgroundColor }}>
+      <FlatList
+        data={profiles as Profile[]}
+        keyExtractor={(item, index) => `${index}${item.id}`}
+        decelerationRate="fast"
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator
+        nestedScrollEnabled
+        shouldActivateOnStart
+        initialNumToRender={2}
+        scrollEnabled
+        scrollEventThrottle={16}
+        style={{ margin: "auto" }}
+        renderItem={({ item }) => (
+          <ProfileCard
+            profile={item}
+            onLike={() => handleLike(item.id)}
+            onDislike={() => handleDislike(item.id)}
+          />
+        )}
+      />
+    </View>
   );
 };
 
