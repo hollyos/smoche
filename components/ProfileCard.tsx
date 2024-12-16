@@ -1,4 +1,4 @@
-import { Profile } from "@/stores/profileStore";
+import { Profile } from "@/stores/useProfileStore";
 import { faThumbsDown } from "@fortawesome/free-solid-svg-icons/faThumbsDown";
 import { faThumbsUp } from "@fortawesome/free-solid-svg-icons/faThumbsUp";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -55,6 +55,9 @@ export interface ProfileCardProps {
    * Triggers a dislike action for the user's profile.
    */
   onDislike: () => void;
+
+  // Function to scroll to this card.
+  scrollToIndex: () => void;
 }
 
 /**
@@ -70,6 +73,7 @@ export const ProfileCard: FC<ProfileCardProps> = ({
   profile,
   onLike,
   onDislike,
+  scrollToIndex,
 }) => {
   /**
    * State variable to manage the visibility of additional profile details.
@@ -77,6 +81,7 @@ export const ProfileCard: FC<ProfileCardProps> = ({
    */
   const [detailsVisible, setDetailsVisible] = useState(false);
   const toggleRef = useRef(() => {
+    scrollToIndex();
     setDetailsVisible((prev) => !prev);
   });
 

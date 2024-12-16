@@ -4,7 +4,7 @@ import {
   FlatList,
   TouchableWithoutFeedback,
 } from "react-native-gesture-handler";
-import { Photo } from "../stores/profileStore";
+import { Photo } from "../stores/useProfileStore";
 
 export interface ImageGalleryProps {
   images: Photo[];

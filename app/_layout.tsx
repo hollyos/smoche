@@ -9,21 +9,30 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useProfileStore } from "@/stores/useProfileStore";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const fetchProfiles = useProfileStore((state) => state.fetchProfiles);
+
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+    const initApp = async () => {
+      if (loaded) {
+        // Fetch profiles when the app loads
+        await fetchProfiles();
+        SplashScreen.hideAsync();
+      }
+    };
+
+    initApp();
+  }, [loaded, fetchProfiles]);
 
   if (!loaded) {
     return null;
