@@ -1,50 +1,85 @@
-# Welcome to your Expo app 👋
+# Frontend Developer Coding Challenge
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Hi! Welcome to Feeld. As part of the recruitment process we want to know how you think, code and structure your work. In order to do that, we're going to ask you to complete this coding challenge.
 
-## Get started
+## Some background
 
-1. Install dependencies
+Feeld is a dating app. People are free to browse profiles and decide whether they like them or not.
 
-   ```bash
-   npm install
-   ```
+## What we expect
 
-2. Start the app
+- Build a performant, clean and well structured solution;
+- Commit early and often. We want to be able to check your progress;
+- Feel free to address the problem creatively according to your programming tastes (there are always multiple ways to achieve the same goal) and try to use elegant solutions.
+- Feeld.co is a design-driven app. Your solution should look _modern, relevant, simple and in line with our brand image_
+- Go the extra mile. The requirements below are just the bare minimum. Be creative and come up with a solution that will impress us. If you think our requirements are whack, or not appropriate, change them and explain why
+- You have **one week** to complete this challenge
 
-   ```bash
-    npx expo start
-   ```
+## The Challenge
 
-In the output, you'll find options to open the app in a
+Our backend team has created an API that will give you a bunch of user profiles, and you have been given some (very loose) requirements from the product team:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- You must build an app that displays these users in an attractive way (think Tinder, Grindr, Happn, Hinge)
+- The API will return the following information about a user:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+{
+    "id": "55be3c8fc964860700ebf515",
+    "info": {
+        "age": 20,
+        "type": "single",
+        "gender": "male",
+        "sexuality": "straight",
+        "name": "D",
+        // a short text about them
+        "about": "\"Tell us more about you\"",
+        // a list of desires
+        "desires": [
+            "Food"
+        ],
+        // a list of tags they're interested in
+        "interests": [
+            "Food"
+        ]
+    },
+    "associated": null, // if they're a couple, this will be populated
+    "photos": [ // this will be a list of zero or more photos
+        {
+            "url": "...",
+            "width": 716,
+            "height": 716
+        }
+    ]
+}
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- A user should be able to make a decision (Like or Dislike) on the user, but they don't _have_ to, i.e. they can skip the profile.
+- The user should be able to browse another user's photos
 
-## Learn more
+## Accessing the API
 
-To learn more about developing your project with Expo, look at the following resources:
+API Root URL: https://fld-devtest-api.herokuapp.com
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+The API is authenticated using the following session token that must be supplied in the HTTP request headers (using the `session-token` key):
 
-## Join the community
+```
+3TtY+AVtEJMaOPWGyEulVEgVBWZ8gqM75gag6wCcA3rJCYWMkX/ZmAOJxrZ4bPyBLJBch7VyMYD8ZCWoNPCUnJbT5M2iRWjJteGrfNhFzd+0oDbWQwiNAIdG0W9rHw7sKAAWk5uEzjs+lPykJnmy56LRwSFpoyxHC7p9G3KTQoQ=
+```
 
-Join our community of developers creating universal apps.
+### Endpoints
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+There's only one—`/api/v1/users`—which will return 20 unique users picked at random from a set of 100 users. You can call this endpoint using Curl as follows:
+
+```
+curl -H 'session-token: 3TtY+AVtEJMaOPWGyEulVEgVBWZ8gqM75gag6wCcA3rJCYWMkX/ZmAOJxrZ4bPyBLJBch7VyMYD8ZCWoNPCUnJbT5M2iRWjJteGrfNhFzd+0oDbWQwiNAIdG0W9rHw7sKAAWk5uEzjs+lPykJnmy56LRwSFpoyxHC7p9G3KTQoQ=' \
+https://fld-devtest-api.herokuapp.com/api/v1/users
+```
+
+## Your task:
+
+1. Clone this repo
+2. Produce a React Native app that calls the provided API and displays users.
+3. Create a README file explaining your technical choices, architecture and if you have them, your ideas and suggestions.
+4. Create a pull request with your solution.
+
+GOOD LUCK!
